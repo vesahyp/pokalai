@@ -1,0 +1,14 @@
+# LinkedIn posting assistant
+
+# Your personal instance (topics, sources, post history, digest) — never committed
+instance/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
