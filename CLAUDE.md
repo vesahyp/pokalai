@@ -18,12 +18,34 @@ All personal files live under `instance/` — this folder is gitignored and stay
 | `instance/state/daily-digest.md` | Today's findings from sources |
 | `instance/state/posts.md` | Full history of published posts |
 | `instance/state/weekly-log.md` | Timestamped action log |
+| `instance/browser-state.json` | Saved LinkedIn session cookies (created by `setup browser`) |
 
 Always read relevant state files before acting. Always update state files after acting.
 
 ---
 
 ## Commands
+
+### `setup browser` / `login to linkedin`
+
+**IMPORTANT: This command must be run interactively (without `-p`), as it requires you to manually log in to LinkedIn in the browser window that opens.**
+
+1. Use `browser_navigate` to open `https://www.linkedin.com/login`
+2. Take a screenshot and tell the user: "LinkedIn login page is open. Please log in in the browser window, then tell me when you're done."
+3. Wait for the user to confirm they have logged in
+4. Use `browser_run_code` to extract and return the full session state:
+   ```js
+   async (page) => {
+     const state = await page.context().storageState();
+     return JSON.stringify(state);
+   }
+   ```
+5. Write the returned JSON string to `instance/browser-state.json` using the Write tool
+6. Navigate to `https://www.linkedin.com/feed` and take a screenshot to confirm the feed is visible (not the login page)
+7. Append to `instance/state/weekly-log.md`: `[YYYY-MM-DD] BROWSER_SETUP — LinkedIn session saved to browser-state.json`
+8. Print: "Session saved. You can now run `post to linkedin` non-interactively with: claude -p \"post to linkedin\""
+
+---
 
 ### `initialize pokalai with interests about [topics]`
 
@@ -80,8 +102,18 @@ Practical, actionable insights. Real-world examples. Contrarian takes when well-
 3. Read the last 10 entries of `instance/state/posts.md` — note angles already used, avoid repetition
 4. Draft a LinkedIn post: fresh angle, grounded in today's digest, following the style guide
 5. Use Playwright to publish:
-   - Navigate to https://www.linkedin.com
-   - If not logged in: pause and ask the user to log in, then continue
+   - Check that `instance/browser-state.json` exists. If it does not, print: "No saved session found. Run `setup browser` interactively first." and stop.
+   - Use `browser_run_code` to restore the saved session cookies:
+     ```js
+     async (page) => {
+       const fs = require('fs');
+       const state = JSON.parse(fs.readFileSync('instance/browser-state.json', 'utf8'));
+       await page.context().addCookies(state.cookies);
+       return state.cookies.length + ' cookies restored';
+     }
+     ```
+   - Navigate to `https://www.linkedin.com`
+   - Take a snapshot. If the URL contains `/login` or `/authwall`, print: "LinkedIn session has expired. Run `setup browser` interactively to log in again." and stop.
    - Click the "Start a post" button
    - Fill in the post content
    - Click the "Post" button
