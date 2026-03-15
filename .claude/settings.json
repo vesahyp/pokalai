@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "mcp__plugin_playwright_playwright__*"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "mode": "auto-allow",
+    "filesystem": {
+      "allowWrite": ["/instance"]
+    },
+    "network": {
+      "allowManagedDomainsOnly": false
+    }
+  }
+}

@@ -1,6 +1,8 @@
-# pokalai — LinkedIn Content Assistant *(puh-KAH-leh)*
+# pokalai — LinkedIn Content Assistant
 
-A portable LinkedIn posting assistant driven entirely by natural language commands to Claude. No scripts. No dashboards. Just Claude reading its instructions and acting.
+_(puh-KAH-leh)_
+
+A LinkedIn posting assistant driven by natural language commands to Claude.
 
 ## What this is
 
@@ -31,53 +33,48 @@ In your Claude Code settings (`~/.claude/settings.json`), add:
 }
 ```
 
+### Configuring permissions
+
+`.claude/settings.json` is committed to this repo and pre-configures Claude Code to run without prompting for permissions.
+
 ---
 
-## Setup (3 steps)
+## Setup
 
-**1. Clone the repo**
 ```bash
 git clone https://github.com/yourusername/pokalai.git
 cd pokalai
+./setup.sh
 ```
 
-**2. Open a terminal in the repo directory**
-```bash
-cd /path/to/pokalai
-```
-
-**3. Run the initialize command with your topics**
-```bash
-claude -p "initialize pokalai with interests about ITSM, ITIL and service management"
-```
-
-Replace the topics with whatever you actually care about. Claude will:
-- Save your topics
-- Find relevant sources (subreddits, blogs, newsletters, LinkedIn voices)
-- Run an initial digest so you're ready to post immediately
-- Print a summary of what it found
+The script will ask for your topics, initialize the agent, and set up a cron job to refresh your digest every morning and send a weekly summary every Monday.
 
 ---
 
 ## Daily use
 
 **Post to LinkedIn:**
+
 ```bash
 claude -p "post to linkedin"
 ```
+
 Claude drafts a post based on today's digest, checks your post history to avoid repeating angles, and publishes it. You'll be prompted to log in if the LinkedIn session has expired.
 
 **Refresh your digest manually:**
+
 ```bash
 claude -p "daily refresh"
 ```
 
 **See what you posted this week:**
+
 ```bash
 claude -p "what did we post this week"
 ```
 
 **Find new sources:**
+
 ```bash
 claude -p "gather more sources"
 ```
@@ -87,6 +84,7 @@ claude -p "gather more sources"
 ## Customizing your style
 
 Edit `config/style-guide.md` directly, or tell Claude:
+
 ```bash
 claude -p "update my style — I want shorter posts, max 100 words, no questions at the end"
 ```
@@ -102,19 +100,16 @@ claude -p "remove topic ITIL"
 
 ---
 
-## Optional: Daily automation via Apple Shortcuts
+## Automation
 
-To automatically refresh your digest every morning without opening a terminal:
+Scheduled runs are set up by `setup.sh` via cron:
 
-1. Open **Shortcuts** on macOS
-2. Create a new shortcut → Add action → **Run Shell Script**
-3. Paste this script (replace the path):
-   ```bash
-   cd /path/to/pokalai && claude -p "daily refresh" --allowedTools "Read,Write,WebFetch,WebSearch"
-   ```
-4. Set a daily schedule in the shortcut's settings
+| Job | Schedule |
+|-----|----------|
+| Daily digest refresh | Every day at 07:00 |
+| Weekly summary | Every Monday at 08:00 |
 
-For fully automated daily posting, change `daily refresh` to `post to linkedin` — but review `state/posts.md` occasionally to make sure the angles stay fresh.
+Logs are written to `instance/cron.log`. To adjust the schedule, edit your crontab with `crontab -e`.
 
 ---
 
@@ -122,20 +117,21 @@ For fully automated daily posting, change `daily refresh` to `post to linkedin` 
 
 **Tracked by git** (the agent, safe to share):
 
-| File | What it is |
-|------|-----------|
+| File        | What it is                                                        |
+| ----------- | ----------------------------------------------------------------- |
 | `CLAUDE.md` | Claude's standing instructions (read automatically every session) |
-| `README.md` | This file |
+| `README.md` | This file                                                         |
+| `setup.sh`  | One-time setup: initializes the agent and installs cron jobs      |
 
 **Gitignored** (your personal instance, stays local):
 
-| File | What it is |
-|------|-----------|
-| `instance/config/topics.md` | Your interests |
+| File                             | What it is                  |
+| -------------------------------- | --------------------------- |
+| `instance/config/topics.md`      | Your interests              |
 | `instance/config/style-guide.md` | Tone and format preferences |
-| `instance/config/sources.md` | Sources Claude monitors |
-| `instance/state/daily-digest.md` | Today's findings |
-| `instance/state/posts.md` | Full post history |
-| `instance/state/weekly-log.md` | Action log |
+| `instance/config/sources.md`     | Sources Claude monitors     |
+| `instance/state/daily-digest.md` | Today's findings            |
+| `instance/state/posts.md`        | Full post history           |
+| `instance/state/weekly-log.md`   | Action log                  |
 
 The `instance/` folder is created by the `initialize` command and is listed in `.gitignore` — your topics, sources, and post history never get committed. All files are plain markdown and can be read and edited directly.
