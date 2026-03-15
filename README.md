@@ -1,4 +1,4 @@
-# pokalai — LinkedIn Content Assistant
+# pokalai — LinkedIn Content Assistant *(puh-KAH-leh)*
 
 A portable LinkedIn posting assistant driven entirely by natural language commands to Claude. No scripts. No dashboards. Just Claude reading its instructions and acting.
 
