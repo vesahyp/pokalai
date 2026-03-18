@@ -130,6 +130,40 @@ Practical, actionable insights. Real-world examples. Contrarian takes when well-
 
 ---
 
+### `check linkedin` / `refresh linkedin session`
+
+Session keep-alive and activity check. Designed to run via cron before posting jobs.
+
+1. Check that `instance/browser-state.json` exists. If not, print: "No saved session found. Run `setup browser` interactively first." and stop.
+2. Restore the saved session cookies:
+   ```js
+   async (page) => {
+     const fs = require('fs');
+     const state = JSON.parse(fs.readFileSync('instance/browser-state.json', 'utf8'));
+     await page.context().addCookies(state.cookies);
+     return state.cookies.length + ' cookies restored';
+   }
+   ```
+3. Navigate to `https://www.linkedin.com/mynetwork/invitation-manager/` (the pending invitations page)
+4. Take a snapshot. If the URL contains `/login` or `/authwall`, print: "LinkedIn session has expired. Run `setup browser` interactively to log in again." and stop.
+5. Check for pending connection requests:
+   - Look for invitation cards/items on the page
+   - For each pending invitation, click the "Accept" button
+   - After accepting, take a snapshot to confirm
+   - Count how many were accepted
+6. Save the refreshed session state:
+   ```js
+   async (page) => {
+     const state = await page.context().storageState();
+     return JSON.stringify(state);
+   }
+   ```
+7. Write the returned JSON to `instance/browser-state.json` (overwrite) — this keeps cookies fresh
+8. Append to `instance/state/weekly-log.md`: `[YYYY-MM-DD] CHECK_LINKEDIN — session refreshed, N connection requests accepted`
+9. Print: "Session refreshed. N connection requests accepted."
+
+---
+
 ### `daily refresh` / `check sources`
 
 1. Read `instance/config/sources.md` to get the list of sources
@@ -200,6 +234,7 @@ Practical, actionable insights. Real-world examples. Contrarian takes when well-
 
 ## General Rules
 
+- Always start your output with a timestamp: `[YYYY-MM-DD HH:MM]` — this is critical for cron-invoked runs so logs are traceable
 - All personal files live under `instance/` — never write config or state outside this folder
 - Always read relevant state files before taking action
 - Always write updates to state files after taking action
