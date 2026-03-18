@@ -144,12 +144,12 @@ Session keep-alive and activity check. Designed to run via cron before posting j
      return state.cookies.length + ' cookies restored';
    }
    ```
-3. Navigate to `https://www.linkedin.com/mynetwork/invitation-manager/` (the pending invitations page)
+3. Navigate to `https://www.linkedin.com/mynetwork/` (the My Network page — this is where pending invitations appear, NOT the invitation-manager sub-page which may show 0)
 4. Take a snapshot. If the URL contains `/login` or `/authwall`, print: "LinkedIn session has expired. Run `setup browser` interactively to log in again." and stop.
 5. Check for pending connection requests:
-   - Look for invitation cards/items on the page
-   - For each pending invitation, click the "Accept" button
-   - After accepting, take a snapshot to confirm
+   - Look for the "Invites received" section on the page
+   - For each pending invitation, look for buttons matching "Accept [name]'s invitation" and click them
+   - After accepting each one, take a snapshot to confirm
    - Count how many were accepted
 6. Save the refreshed session state:
    ```js
