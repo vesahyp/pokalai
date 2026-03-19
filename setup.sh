@@ -28,26 +28,6 @@ echo "A browser window will open — log in there, then tell the agent you're do
 echo ""
 claude "setup browser"
 
-# Install cron jobs if not already present
-CRONTAB_CURRENT="$(crontab -l 2>/dev/null || echo '')"
-NEW_CRONTAB="$CRONTAB_CURRENT"
-
-if ! echo "$CRONTAB_CURRENT" | grep -qF "$REPO_DIR.*daily refresh"; then
-  NEW_CRONTAB="$NEW_CRONTAB"$'\n'"0 7 * * * cd $REPO_DIR && claude -p \"daily refresh\" >> $REPO_DIR/instance/cron.log 2>&1"
-fi
-
-if ! echo "$CRONTAB_CURRENT" | grep -qF "$REPO_DIR.*post to linkedin"; then
-  NEW_CRONTAB="$NEW_CRONTAB"$'\n'"0 9 * * 3 cd $REPO_DIR && claude -p \"post to linkedin\" >> $REPO_DIR/instance/cron.log 2>&1"
-  NEW_CRONTAB="$NEW_CRONTAB"$'\n'"0 9 * * 0 cd $REPO_DIR && claude -p \"post to linkedin\" >> $REPO_DIR/instance/cron.log 2>&1"
-fi
-
-if [[ "$NEW_CRONTAB" != "$CRONTAB_CURRENT" ]]; then
-  echo "$NEW_CRONTAB" | crontab -
-  echo ""
-  echo "Cron jobs installed:"
-  echo "  - Daily digest refresh: every day at 07:00"
-  echo "  - Post to LinkedIn: Wednesday and Sunday at 09:00"
-fi
-
 echo ""
-echo "Done. Run 'claude -p \"post to linkedin\"' whenever you're ready to post."
+echo "Done. To schedule automatic posts, use runCLAUDErun (https://runclauderun.com/)."
+echo "See README.md for suggested schedule."

@@ -47,7 +47,7 @@ cd pokalai
 ./setup.sh
 ```
 
-The script will ask for your topics, initialize the agent, and set up a cron job to refresh your digest every morning and send a weekly summary every Monday.
+The script will ask for your topics, initialize the agent, and open the LinkedIn login flow.
 
 ---
 
@@ -102,14 +102,17 @@ claude -p "remove topic ITIL"
 
 ## Automation
 
-Scheduled runs are set up by `setup.sh` via cron:
+Use [runCLAUDErun](https://runclauderun.com/) to schedule tasks. It's a free native macOS app that runs Claude Code commands on a schedule — even when your Mac sleeps.
 
-| Job | Schedule |
-|-----|----------|
-| Daily digest refresh | Every day at 07:00 |
-| Weekly summary | Every Monday at 08:00 |
+Suggested schedule:
 
-Logs are written to `instance/cron.log`. To adjust the schedule, edit your crontab with `crontab -e`.
+| Task | Command | Schedule |
+|------|---------|----------|
+| Daily digest refresh | `daily refresh` | Every day at 07:00 |
+| Post to LinkedIn | `post to linkedin` | Wednesday and Sunday at 09:00 |
+| Session keep-alive | `check linkedin` | Every day at 08:00 |
+
+Set the working directory to this repo's folder in each task.
 
 ---
 
@@ -121,7 +124,7 @@ Logs are written to `instance/cron.log`. To adjust the schedule, edit your cront
 | ----------- | ----------------------------------------------------------------- |
 | `CLAUDE.md` | Claude's standing instructions (read automatically every session) |
 | `README.md` | This file                                                         |
-| `setup.sh`  | One-time setup: initializes the agent and installs cron jobs      |
+| `setup.sh`  | One-time setup: initializes the agent and LinkedIn login          |
 
 **Gitignored** (your personal instance, stays local):
 
