@@ -73,6 +73,14 @@ claude -p "daily refresh"
 claude -p "what did we post this week"
 ```
 
+**Check LinkedIn session and accept connection requests:**
+
+```bash
+claude -p "check linkedin"
+```
+
+Refreshes your session cookies (keeps you logged in) and accepts any pending connection requests. Runs automatically if you set up the schedule below.
+
 **Find new sources:**
 
 ```bash
@@ -97,6 +105,35 @@ claude -p "update my style — I want shorter posts, max 100 words, no questions
 claude -p "add topic IT asset management"
 claude -p "remove topic ITIL"
 ```
+
+---
+
+## Playwright: headed vs headless mode
+
+Playwright runs as a Claude Code plugin. By default it launches in **headed mode** (visible browser window), which you need for the initial `setup browser` login.
+
+Once login is complete, switch to **headless mode** so scheduled tasks work without a display (e.g. when the Mac lid is closed).
+
+### How to switch
+
+Edit `~/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/playwright/.mcp.json`:
+
+**Headed** (default — for `setup browser` login):
+```json
+{ "playwright": { "command": "npx", "args": ["@playwright/mcp@latest"] } }
+```
+
+**Headless** (for scheduled tasks):
+```json
+{ "playwright": { "command": "npx", "args": ["@playwright/mcp@latest", "--headless"] } }
+```
+
+Restart Claude Code after changing.
+
+### When to use which
+
+- **Headed**: Run `setup browser` to log in — you need the visible browser window.
+- **Headless**: After login, switch to headless so scheduled tasks (daily refresh, check linkedin, post to linkedin) work reliably even with the lid closed.
 
 ---
 
