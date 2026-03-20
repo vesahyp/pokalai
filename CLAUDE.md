@@ -232,6 +232,35 @@ Session keep-alive and activity check. Designed to run via cron before posting j
 
 ---
 
+## Playwright & Headless Mode
+
+Playwright is installed as a Claude Code plugin. By default it runs in **headed mode** (visible browser window), which is needed for the initial `setup browser` login.
+
+Once login is complete, switch to **headless mode** so scheduled tasks work without a display (e.g. when the Mac lid is closed). The agent cannot switch between headed/headless per-session — it's a server startup setting.
+
+### How to switch between modes
+
+Edit `~/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/playwright/.mcp.json`:
+
+**Headed** (default — for `setup browser` login):
+```json
+{ "playwright": { "command": "npx", "args": ["@playwright/mcp@latest"] } }
+```
+
+**Headless** (for scheduled tasks):
+```json
+{ "playwright": { "command": "npx", "args": ["@playwright/mcp@latest", "--headless"] } }
+```
+
+Restart Claude Code after changing.
+
+### When to use which
+
+- **Headed**: Run `setup browser` to log in — you need the visible browser window.
+- **Headless**: After login, switch to headless so runCLAUDErun scheduled tasks (daily refresh, check linkedin, post to linkedin) work reliably even with the lid closed.
+
+---
+
 ## General Rules
 
 - Always start your output with a timestamp: `[YYYY-MM-DD HH:MM]` — this is critical for cron-invoked runs so logs are traceable
