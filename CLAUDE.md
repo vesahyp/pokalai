@@ -103,13 +103,12 @@ Practical, actionable insights. Real-world examples. Contrarian takes when well-
 4. Draft a LinkedIn post: fresh angle, grounded in today's digest, following the style guide
 5. Use Playwright to publish:
    - Check that `instance/browser-state.json` exists. If it does not, print: "No saved session found. Run `setup browser` interactively first." and stop.
-   - Use `browser_run_code` to restore the saved session cookies:
+   - Read `instance/browser-state.json` with the Read tool, then restore cookies via `browser_run_code` with the cookies array embedded directly in the code:
      ```js
      async (page) => {
-       const fs = require('fs');
-       const state = JSON.parse(fs.readFileSync('instance/browser-state.json', 'utf8'));
-       await page.context().addCookies(state.cookies);
-       return state.cookies.length + ' cookies restored';
+       const cookies = /* cookies array from the file */;
+       await page.context().addCookies(cookies);
+       return cookies.length + ' cookies restored';
      }
      ```
    - Navigate to `https://www.linkedin.com`
@@ -135,13 +134,12 @@ Practical, actionable insights. Real-world examples. Contrarian takes when well-
 Session keep-alive and activity check. Designed to run via cron before posting jobs.
 
 1. Check that `instance/browser-state.json` exists. If not, print: "No saved session found. Run `setup browser` interactively first." and stop.
-2. Restore the saved session cookies:
+2. Read `instance/browser-state.json` with the Read tool, then restore cookies via `browser_run_code` with the cookies array embedded directly in the code:
    ```js
    async (page) => {
-     const fs = require('fs');
-     const state = JSON.parse(fs.readFileSync('instance/browser-state.json', 'utf8'));
-     await page.context().addCookies(state.cookies);
-     return state.cookies.length + ' cookies restored';
+     const cookies = /* cookies array from the file */;
+     await page.context().addCookies(cookies);
+     return cookies.length + ' cookies restored';
    }
    ```
 3. Navigate to `https://www.linkedin.com/mynetwork/` (the My Network page — this is where pending invitations appear, NOT the invitation-manager sub-page which may show 0)
