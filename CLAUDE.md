@@ -149,16 +149,31 @@ Session keep-alive and activity check. Designed to run via cron before posting j
    - For each pending invitation, look for buttons matching "Accept [name]'s invitation" and click them
    - After accepting each one, take a snapshot to confirm
    - Count how many were accepted
-6. Save the refreshed session state:
+6. Check for and reply to comments on recent posts:
+   - Read `instance/state/posts.md` to get the dates and content of recent posts
+   - Read `instance/config/style-guide.md` to match tone in replies
+   - Navigate to `https://www.linkedin.com/in/me/recent-activity/all/`
+   - Take a snapshot to see recent posts
+   - For each post from the last 7 days that has comments:
+     - Click on the post to open its detail/comment view
+     - Take a snapshot to see the comments
+     - Identify comments that haven't been replied to yet (look for comments without a reply from the post author)
+     - For each unreplied comment, draft a thoughtful reply that: acknowledges the commenter's point, adds value or continues the conversation, and matches the style guide tone
+     - Click the "Reply" button on the comment, type the reply, and submit it
+     - Take a snapshot to confirm the reply was posted
+     - Count replies sent
+   - Navigate back to the activity page between posts if needed
+   - Note: If a comment is spam or irrelevant, skip it
+7. Save the refreshed session state:
    ```js
    async (page) => {
      const state = await page.context().storageState();
      return JSON.stringify(state);
    }
    ```
-7. Write the returned JSON to `instance/browser-state.json` (overwrite) — this keeps cookies fresh
-8. Append to `instance/state/weekly-log.md`: `[YYYY-MM-DD] CHECK_LINKEDIN — session refreshed, N connection requests accepted`
-9. Print: "Session refreshed. N connection requests accepted."
+8. Write the returned JSON to `instance/browser-state.json` (overwrite) — this keeps cookies fresh
+9. Append to `instance/state/weekly-log.md`: `[YYYY-MM-DD] CHECK_LINKEDIN — session refreshed, N connection requests accepted, M comment replies sent`
+10. Print: "Session refreshed. N connection requests accepted. M comment replies sent."
 
 ---
 
