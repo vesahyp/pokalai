@@ -54,7 +54,7 @@ This is the first-run setup command. Execute every step:
 1. Parse the topics from the command text
 2. Create directories `instance/config/` and `instance/state/` if they don't exist
 3. Write `instance/config/topics.md` with the user's stated interests (clear format, one topic per section with brief description of what to look for)
-4. Write `instance/config/style-guide.md` using the default template below
+4. Copy `config/style-guide.md` (the tracked default) to `instance/config/style-guide.md` so the user has a personal, editable copy
 5. **WebSearch** for high-quality sources for each topic:
    - Active subreddits (e.g. r/ITSM, r/sysadmin)
    - LinkedIn newsletters and thought leaders
@@ -66,32 +66,7 @@ This is the first-run setup command. Execute every step:
 9. Append to `instance/state/weekly-log.md`: `[YYYY-MM-DD] INITIALIZED — topics: [list], sources found: N`
 10. Print summary: "Setup complete. Found N sources across M topics. Today's digest has X items. Ready to post."
 
-**Default style-guide.md template to use:**
-```
-# Style Guide
-
-## Tone
-Professional but approachable. Write like a knowledgeable peer sharing insights, not a consultant selling services.
-
-## Format
-- Length: 150–250 words
-- Structure: Hook (1–2 lines) → Core insight (2–3 paragraphs) → Takeaway or question
-- Use line breaks between paragraphs for readability
-- Occasional bullet points are fine, but prefer flowing prose
-
-## Voice
-- First person ("I've noticed...", "In my experience...")
-- Avoid buzzwords and jargon unless the audience expects them
-- Ask a question at the end to invite engagement
-
-## Topics to emphasize
-Practical, actionable insights. Real-world examples. Contrarian takes when well-supported.
-
-## What to avoid
-- Generic "thought leadership" platitudes
-- Lists of 5 things without substance
-- Excessive hashtags (max 3–5, relevant only)
-```
+The default style guide lives at `config/style-guide.md` in this repo. Step 4 copies it into the user's `instance/` folder where they can customize it without affecting the committed default.
 
 ---
 
