@@ -15,4 +15,4 @@ Thumbs.db
 
 # Playwright MCP logs
 .playwright-mcp/
-recent-activity.yml
+/*.yml
